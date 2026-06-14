@@ -38,20 +38,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        # Notice we removed fetch-depth: 0, it is no longer needed!
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install Hugging Face CLI
-        run: pip install huggingface_hub
 
       - name: Deploy to Hugging Face Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # The CLI automatically syncs the current folder (.) to your space
-          # and natively handles binary files like your .pth model
-          huggingface-cli upload SooryaOmeg/mlops-test . --repo-type=space --token=$HF_TOKEN
+          # The 'hf' CLI requires: local_path path_in_repo
+          # We use '. .' to say "upload everything in this current folder to the root of the space"
+          hf upload SooryaOmeg/mlops-test . . --repo-type space
