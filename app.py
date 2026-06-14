@@ -164,7 +164,7 @@ if run_prediction:
             combined_df = pd.concat([actual_df, pred_df], ignore_index=True)
             
             # Generate Native Line Chart Grouped by Type
-            st.line_chart(combined_df, x='Date', y='Close', color='Type', width='stretch')
+            st.line_chart(combined_df, x='Date', y='Close', color='Type', use_container_width=True)
             
             # Display Raw Data View
             with st.expander(f"View predictions vs actuals (Last {predict_window} Days)"):
