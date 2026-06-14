@@ -39,10 +39,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install Hugging Face CLI
+        # Installs the modern standalone 'hf' binary natively into the runner
+        run: curl -LsSf https://hf.co/cli/install.sh | bash
+
       - name: Deploy to Hugging Face Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # The 'hf' CLI requires: local_path path_in_repo
-          # We use '. .' to say "upload everything in this current folder to the root of the space"
+          # The 'hf' CLI natively handles large binary files
           hf upload SooryaOmeg/mlops-test . . --repo-type space
