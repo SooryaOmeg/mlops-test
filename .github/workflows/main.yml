@@ -33,21 +33,19 @@ jobs:
   # Continuous Deployment (CD) - Deployment Phase
   # ---------------------------------------------
   deploy-to-hub:
-    # This ensures deployment ONLY happens if the tests above pass!
     needs: test-pipeline
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
-      - name: Push to Hugging Face Spaces
+      - name: Install Hugging Face CLI
+        # Installs the modern standalone 'hf' binary natively into the runner
+        run: curl -LsSf https://hf.co/cli/install.sh | bash
+
+      - name: Deploy to Hugging Face Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # Add the Hugging Face remote repository
-          git remote add space https://huggingface.co/spaces/SooryaOmeg/mlops-test
-          
-          # Force push the main branch to Hugging Face to trigger the Streamlit build
-          git push --force https://YOUR_HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/SooryaOmeg/mlops-test main
+          # The 'hf' CLI natively handles large binary files
+          hf upload SooryaOmeg/mlops-test . . --repo-type space
