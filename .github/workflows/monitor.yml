@@ -1,0 +1,30 @@
+name: Daily Model Performance Monitor
+
+# A "cron" job schedules workflows to run at specific times.
+# "0 0 * * 2-6" means: Run at Midnight UTC, Tuesday through Saturday
+# (which covers Monday-Friday US market closes).
+on:
+  schedule:
+    - cron: '0 0 * * 2-6'
+
+  # This allows you to click a button in GitHub to run it manually anytime!
+  workflow_dispatch:
+
+jobs:
+  check-model-health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Monitoring Script
+        run: python monitor.py
